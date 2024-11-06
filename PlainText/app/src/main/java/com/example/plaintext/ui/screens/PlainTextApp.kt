@@ -29,7 +29,7 @@ fun PlainTextApp(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = Screen.Hello("DevTITANS"),
+        startDestination = Screen.Login,
     )
     {
         composable<Screen.Hello>{

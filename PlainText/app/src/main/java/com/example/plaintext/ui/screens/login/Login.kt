@@ -2,25 +2,31 @@ package com.example.plaintext.ui.screens.login
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -48,6 +55,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -68,10 +76,112 @@ data class LoginState(
 fun Login_screen(
     navigateToSettings: () -> Unit,
     navigateToList: () -> Unit,
-    viewModel: PreferencesViewModel = hiltViewModel()
 ) {
-
+    Scaffold(
+        topBar = {
+            TopBarComponent()
+        },
+        modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Login(
+            name = "Android",
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
 }
+
+@Composable
+fun Login(name: String, modifier: Modifier = Modifier) {
+    var login by remember {mutableStateOf("")}
+    var pswd by remember {mutableStateOf("")}
+    var checked by remember {mutableStateOf(false)}
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Green)
+                .padding(2.dp)
+            ,
+            contentAlignment = Alignment.Center
+
+        ) {
+            Row (
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 40.dp)
+                ,
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically)
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Imagem de exemplo",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "\"The most secure password manager\" Bob and Alice",
+                    color = Color.White)
+            }
+        }
+        Column(
+            modifier = Modifier.padding(25.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text="Digite suas credenciais para continuar",
+                fontSize = 12.sp,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text="Login:  ", fontSize = 12.sp,)
+
+                OutlinedTextField(
+                    value = login,
+                    onValueChange = { login = it },
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text="Senha: ", fontSize = 12.sp,)
+
+                OutlinedTextField(
+                    value = pswd,
+                    onValueChange = { pswd = it },
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox (
+                    checked = checked,
+                    onCheckedChange = { checked = it },
+                )
+                Text(text="Salvar as informações de login", fontSize = 12.sp,)
+
+            }
+            Button (
+                onClick = { /* ação ao clicar */ },
+                modifier = Modifier.padding(16.dp),
+                shape = RoundedCornerShape(20.dp),
+                border = BorderStroke(0.dp, Color.Gray),
+                colors = ButtonDefaults.buttonColors(),
+                //elevation = ButtonDefaults.buttonElevation(8.dp),
+                enabled = true
+            ){
+                Text("Enviar", fontSize = 12.sp,)
+            }
+        }
+    }
+}
+
 
 @Composable
 fun MyAlertDialog(shouldShowDialog: MutableState<Boolean>) {
@@ -141,3 +251,5 @@ fun TopBarComponent(
         }
     )
 }
+
+
