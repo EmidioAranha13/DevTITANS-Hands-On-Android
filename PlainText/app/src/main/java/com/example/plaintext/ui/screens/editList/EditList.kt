@@ -98,5 +98,10 @@ fun EditListPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EditInputPreview() {
-    EditInput("Nome")
+    Column {
+        EditInput("Nome")
+        EditInput("Usuario")
+        EditInput("Senha")
+        EditInput("Notas", textInputHeight = 240)
+    }
 }
