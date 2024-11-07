@@ -16,6 +16,7 @@ import kotlin.reflect.KProperty
 @Entity(
     tableName = "passwords"
 )
+
 @Immutable
 data class Password(
     @PrimaryKey

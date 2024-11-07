@@ -12,12 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -27,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,6 +92,29 @@ fun EditInput(
     Spacer(modifier = Modifier.height(10.dp))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTopBar(
+    textInputLabel: String
+){
+    TopAppBar(
+        title = {
+            Text(
+                text = textInputLabel,
+                color = Color.White,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxHeight().wrapContentHeight(align = Alignment.CenterVertically)
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF3DDC84) // Verde claro
+        ),
+        modifier = Modifier.height(56.dp)
+    )
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun EditListPreview() {
@@ -95,13 +125,43 @@ fun EditListPreview() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun EditInputPreview() {
-    Column {
-        EditInput("Nome")
-        EditInput("Usuario")
-        EditInput("Senha")
-        EditInput("Notas", textInputHeight = 240)
-    }
+
+    Scaffold (
+        topBar = {
+            CustomTopBar("Adicionar nova senha")
+        },
+
+        content = { padding ->
+            Column (modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+            )
+            {
+                EditInput("Nome")
+                EditInput("Usuario")
+                EditInput("Senha")
+                EditInput("Notas", textInputHeight = 240)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(horizontal = 30.dp),
+                    horizontalArrangement = Arrangement.Center,
+                )
+                {
+                    Button(
+                        onClick = { /* Ação do botão */ },
+                    ){
+                        Text("Salvar")
+                    }
+                }
+            }
+        }
+    )
+
 }
