@@ -1,2 +1,5 @@
 android-studio/
 android-studio-2024.*
+PlainText/.gradle/
+PlainText/.idea/
+PlainText/.kotlin/
