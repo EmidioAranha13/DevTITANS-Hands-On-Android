@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -80,8 +81,7 @@ fun Login_screen(
     Scaffold(
         topBar = {
             TopBarComponent()
-        },
-        modifier = Modifier.fillMaxSize()) { innerPadding ->
+        }) { innerPadding ->
         Login(
             name = "Android",
             modifier = Modifier.padding(innerPadding)
@@ -94,38 +94,38 @@ fun Login(name: String, modifier: Modifier = Modifier) {
     var login by remember {mutableStateOf("")}
     var pswd by remember {mutableStateOf("")}
     var checked by remember {mutableStateOf(false)}
+    var yellowGreen = Color(0xFF9ACD32)
     Column(
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .background(Color.Green)
-                .padding(2.dp)
-            ,
-            contentAlignment = Alignment.Center
-
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .background(yellowGreen),
+            contentAlignment = Alignment.Center,
         ) {
             Row (
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 40.dp)
-                ,
+                modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically)
-            {
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Imagem de exemplo",
                     modifier = Modifier.size(100.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "\"The most secure password manager\" Bob and Alice",
-                    color = Color.White)
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    modifier = Modifier.widthIn(max = 130.dp)
+                    )
             }
         }
         Column(
-            modifier = Modifier.padding(25.dp),
+            modifier = Modifier.padding(45.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -250,6 +250,13 @@ fun TopBarComponent(
             }
         }
     )
+}
+
+@Preview(name="Modo Retrato", heightDp = 700, showBackground = true)
+//@Preview(name="Modo Paisagem", widthDp = 640, showBackground = true)
+@Composable
+fun PreviewUI() {
+    Login("Android")
 }
 
 

@@ -30,8 +30,7 @@ fun PlainTextApp(
     NavHost(
         navController = appState.navController,
         startDestination = Screen.Login,
-    )
-    {
+    ){
         composable<Screen.Hello>{
             var args = it.toRoute<Screen.Hello>()
             Hello_screen(args)
@@ -42,6 +41,13 @@ fun PlainTextApp(
                 navigateToList = {}
             )
         }
+//        composable<Screen.Preferences>{
+//           SettingsScreen(
+//               viewModel = PreferencesViewModel(),
+//               navController = appState.navController,
+//           )
+//        }
+
         composable<Screen.EditList>(
             typeMap = mapOf(typeOf<PasswordInfo>() to parcelableType<PasswordInfo>())
         ) {
