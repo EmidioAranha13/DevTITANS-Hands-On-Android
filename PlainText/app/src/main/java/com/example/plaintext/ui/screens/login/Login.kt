@@ -170,8 +170,8 @@ fun Login(name: String, modifier: Modifier = Modifier, viewModel: PreferencesVie
                 Checkbox(checked = checked, onCheckedChange = { checked = it })
                 Text(text = "Salvar as informações de login", fontSize = 12.sp)
             }
-            Toast.makeText(context, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
-
+            // teste until merger r
+            Toast.makeText(context, "Login/Senha inválidos", Toast.LENGTH_SHORT).show()
             Button(
                 onClick = {
                     // Atualiza o login e a senha no ViewModel antes de verificar as credenciais
@@ -183,9 +183,11 @@ fun Login(name: String, modifier: Modifier = Modifier, viewModel: PreferencesVie
                         // Login bem-sucedido
                         Toast.makeText(context, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
                         // Aqui você pode navegar para outra tela
+//                        navController.navigate("list_screen")  // Aqui a navegação para a tela List
                     } else {
                         // Exibe mensagem de erro
-                        Toast.makeText(context, preferencesState.errorMessage, Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, preferencesState.errorMessage, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Login/Senha inválidos", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.padding(16.dp),
