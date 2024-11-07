@@ -15,10 +15,12 @@ import com.example.plaintext.ui.screens.editList.EditList
 import com.example.plaintext.ui.screens.hello.Hello_screen
 import com.example.plaintext.ui.screens.list.AddButton
 import com.example.plaintext.ui.screens.list.ListView
+import com.example.plaintext.ui.screens.list.List_screen
 import com.example.plaintext.ui.screens.login.Login_screen
 import com.example.plaintext.ui.screens.login.TopBarComponent
 import com.example.plaintext.ui.screens.preferences.SettingsScreen
 import com.example.plaintext.ui.viewmodel.ListViewModel
+import com.example.plaintext.ui.viewmodel.ListViewState
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 import com.example.plaintext.utils.parcelableType
 import kotlin.reflect.typeOf
@@ -56,6 +58,14 @@ fun PlainTextApp(
                 args,
                 navigateBack = {},
                 savePassword = { password -> Unit }
+            )
+        }
+        composable<Screen.List> {
+            List_screen(
+                listViewModel = ListViewModel(),
+                navigateToEdit = { passwordInfo ->
+                    
+                }
             )
         }
     }

@@ -40,13 +40,40 @@ import com.example.plaintext.ui.viewmodel.ListViewState
 import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.plaintext.data.model.PasswordInfo
+import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 
 @Composable
+fun List_screen(
+    listViewModel: ListViewModel,
+    navigateToEdit: (password: PasswordInfo) -> Unit
+) {
+    ListView(listViewModel, navigateToEdit)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun ListView(
-) {}
+    listViewModel: ListViewModel,
+    navigateToEdit: (password: PasswordInfo) -> Unit
+) {
+    Scaffold(
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
+        floatingActionButton = { AddButton( onClick = {}) }
+    ) { padding ->
+        ListItemContent(
+            modifier = Modifier.padding(padding),
+            listState = listViewModel.listViewState
+        ) { passwordInfo ->
+            navigateToEdit(passwordInfo)
+        }
+    }
+}
 
 @Composable
 fun AddButton(onClick: () -> Unit) {
@@ -133,4 +160,3 @@ fun ListItem(
         )
     }
 }
-
