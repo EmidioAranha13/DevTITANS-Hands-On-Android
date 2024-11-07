@@ -90,11 +90,17 @@ fun Login_screen(
 }
 
 @Composable
-fun Login(name: String, modifier: Modifier = Modifier) {
-    var login by remember {mutableStateOf("")}
-    var pswd by remember {mutableStateOf("")}
-    var checked by remember {mutableStateOf(false)}
-    var yellowGreen = Color(0xFF9ACD32)
+fun Login(name: String, modifier: Modifier = Modifier, viewModel: PreferencesViewModel = hiltViewModel()) {
+    // Obtenha o estado atual do ViewModel
+    val preferencesState = viewModel.preferencesState
+
+    // Campos de texto para login e senha
+    var login by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var checked by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -103,10 +109,10 @@ fun Login(name: String, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .background(yellowGreen),
+                .background(Color(0xFF9ACD32)),
             contentAlignment = Alignment.Center,
         ) {
-            Row (
+            Row(
                 modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -121,66 +127,90 @@ fun Login(name: String, modifier: Modifier = Modifier) {
                     color = Color.White,
                     fontSize = 16.sp,
                     modifier = Modifier.widthIn(max = 130.dp)
-                    )
+                )
             }
         }
+
         Column(
             modifier = Modifier.padding(45.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text="Digite suas credenciais para continuar",
+                text = "Digite suas credenciais para continuar",
                 fontSize = 12.sp,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text="Login:  ", fontSize = 12.sp,)
 
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Login:  ", fontSize = 12.sp)
                 OutlinedTextField(
                     value = login,
                     onValueChange = { login = it },
+                    label = { Text("Login") }
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text="Senha: ", fontSize = 12.sp,)
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Senha: ", fontSize = 12.sp)
                 OutlinedTextField(
-                    value = pswd,
-                    onValueChange = { pswd = it },
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Senha") },
+                    visualTransformation = PasswordVisualTransformation()
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox (
-                    checked = checked,
-                    onCheckedChange = { checked = it },
-                )
-                Text(text="Salvar as informações de login", fontSize = 12.sp,)
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(checked = checked, onCheckedChange = { checked = it })
+                Text(text = "Salvar as informações de login", fontSize = 12.sp)
             }
-            Button (
-                onClick = { /* ação ao clicar */ },
+            Toast.makeText(context, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
+
+            Button(
+                onClick = {
+                    // Atualiza o login e a senha no ViewModel antes de verificar as credenciais
+                    viewModel.updateLogin(login)
+                    viewModel.updatePassword(password)
+
+                    // Chama a função para verificar as credenciais
+                    if (viewModel.checkCredentials(login, password)) {
+                        // Login bem-sucedido
+                        Toast.makeText(context, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
+                        // Aqui você pode navegar para outra tela
+                    } else {
+                        // Exibe mensagem de erro
+                        Toast.makeText(context, preferencesState.errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(20.dp),
                 border = BorderStroke(0.dp, Color.Gray),
                 colors = ButtonDefaults.buttonColors(),
-                //elevation = ButtonDefaults.buttonElevation(8.dp),
                 enabled = true
-            ){
-                Text("Enviar", fontSize = 12.sp,)
+            ) {
+                Text("Enviar", fontSize = 12.sp)
             }
+
+
+            // Exibe a mensagem de erro
+            preferencesState.errorMessage?.let {
+                Text(
+                    text = it,
+                    color = Color.Red,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }//Toast.makeText(context, preferencesState.errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }
+
 
 
 @Composable
