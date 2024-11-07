@@ -37,7 +37,7 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
 
     /**
      * Dependency provider for <b>javapoet</b> with <b>com.squareup:javapoet</b> coordinates and
-     * with version <b>javapoet</b>
+     * with version reference <b>javapoet</b>
      * <p>
      * This dependency was declared in catalog libs.versions.toml
      */
@@ -605,7 +605,7 @@ public class LibrariesForLibs extends AbstractExternalDependencyFactory {
         public Provider<String> getHilt() { return getVersion("hilt"); }
 
         /**
-         * Version alias <b>javapoet</b> with value <b>1.13.1</b>
+         * Version alias <b>javapoet</b> with value <b>1.13.0</b>
          * <p>
          * If the version is a rich version and cannot be represented as a
          * single version string, an empty string is returned.
