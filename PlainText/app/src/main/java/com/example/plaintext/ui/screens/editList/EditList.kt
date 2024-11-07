@@ -41,12 +41,12 @@ import com.example.plaintext.data.model.PasswordInfo
 import com.example.plaintext.ui.screens.Screen
 import com.example.plaintext.ui.screens.login.TopBarComponent
 
-data class EditListState(
-    val nomeState: MutableState<String>,
-    val usuarioState: MutableState<String>,
-    val senhaState: MutableState<String>,
-    val notasState: MutableState<String>,
-)
+    data class EditListState(
+        val nomeState: MutableState<String>,
+        val usuarioState: MutableState<String>,
+        val senhaState: MutableState<String>,
+        val notasState: MutableState<String>,
+    )
 
 fun isPasswordEmpty(password: PasswordInfo): Boolean {
     return password.name.isEmpty() && password.login.isEmpty() && password.password.isEmpty() && password.notes.isEmpty()
@@ -125,14 +125,12 @@ fun EditListPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-fun EditInputPreview() {
+fun EditListScreen(editListState: EditListState, titleScreen: String){
 
     Scaffold (
         topBar = {
-            CustomTopBar("Adicionar nova senha")
+            CustomTopBar(titleScreen)
         },
 
         content = { padding ->
@@ -142,10 +140,10 @@ fun EditInputPreview() {
                 .padding(16.dp)
             )
             {
-                EditInput("Nome")
-                EditInput("Usuario")
-                EditInput("Senha")
-                EditInput("Notas", textInputHeight = 240)
+                EditInput("Nome", editListState.nomeState)
+                EditInput("Usuario", editListState.usuarioState)
+                EditInput("Senha", editListState.senhaState)
+                EditInput("Notas", editListState.notasState, textInputHeight = 240)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -163,5 +161,19 @@ fun EditInputPreview() {
             }
         }
     )
+}
 
+@Preview(showBackground = true)
+@Composable
+fun EditInputPreview() {
+    val test = EditListState (
+        nomeState = rememberSaveable { mutableStateOf("") },
+        usuarioState = rememberSaveable { mutableStateOf("") },
+        senhaState = rememberSaveable { mutableStateOf("") },
+        notasState = rememberSaveable { mutableStateOf("") },
+    )
+    EditListScreen(
+        test,
+        titleScreen = "Adcionar nova Senha",
+    )
 }
