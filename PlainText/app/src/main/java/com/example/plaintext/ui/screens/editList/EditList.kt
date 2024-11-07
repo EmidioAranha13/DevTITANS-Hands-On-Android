@@ -3,7 +3,9 @@ package com.example.plaintext.ui.screens.editList
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -41,12 +43,13 @@ import com.example.plaintext.data.model.PasswordInfo
 import com.example.plaintext.ui.screens.Screen
 import com.example.plaintext.ui.screens.login.TopBarComponent
 
-    data class EditListState(
-        val nomeState: MutableState<String>,
-        val usuarioState: MutableState<String>,
-        val senhaState: MutableState<String>,
-        val notasState: MutableState<String>,
-    )
+
+data class EditListState(
+    val nomeState: MutableState<String>,
+    val usuarioState: MutableState<String>,
+    val senhaState: MutableState<String>,
+    val notasState: MutableState<String>,
+)
 
 fun isPasswordEmpty(password: PasswordInfo): Boolean {
     return password.name.isEmpty() && password.login.isEmpty() && password.password.isEmpty() && password.notes.isEmpty()
@@ -58,7 +61,46 @@ fun EditList(
     navigateBack: () -> Unit,
     savePassword: (password: PasswordInfo) -> Unit
 ) {
+    val editListState = EditListState (
+        nomeState = rememberSaveable { mutableStateOf(args.password.name) },
+        usuarioState = rememberSaveable { mutableStateOf(args.password.login) },
+        senhaState = rememberSaveable { mutableStateOf(args.password.password) },
+        notasState = rememberSaveable { mutableStateOf(args.password.notes) },
+    )
 
+    Scaffold (
+        topBar = {
+            TopBarComponent()
+        },
+
+        content = { padding ->
+            Column (modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+            )
+            {
+                TitleScreen("Adcionar nova Senha")
+                EditInput("Nome", editListState.nomeState)
+                EditInput("Usuario", editListState.usuarioState)
+                EditInput("Senha", editListState.senhaState)
+                EditInput("Notas", editListState.notasState, textInputHeight = 240)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(horizontal = 30.dp),
+                    horizontalArrangement = Arrangement.Center,
+                )
+                {
+                    Button(
+                        onClick = { /* Ação do botão */ },
+                    ){
+                        Text("Salvar")
+                    }
+                }
+            }
+        }
+    )
 }
 
 
@@ -94,26 +136,27 @@ fun EditInput(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopBar(
+fun TitleScreen(
     textInputLabel: String
-){
-    TopAppBar(
-        title = {
-            Text(
-                text = textInputLabel,
-                color = Color.White,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxHeight().wrapContentHeight(align = Alignment.CenterVertically)
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF3DDC84) // Verde claro
-        ),
-        modifier = Modifier.height(56.dp)
-    )
+) {
+    Box(
+        modifier = Modifier
+            .height(56.dp)
+            .fillMaxWidth()
+            .background(Color(0xFF9ACD32)) // Cor de fundo verde claro
+    ) {
+        Text(
+            text = textInputLabel,
+            color = Color.White,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxHeight()
+                .wrapContentHeight(align = Alignment.CenterVertically).padding(10.dp)
+                .align(Alignment.CenterStart) // Alinha o texto no centro da Box
+        )
+    }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -125,55 +168,3 @@ fun EditListPreview() {
     )
 }
 
-@Composable
-fun EditListScreen(editListState: EditListState, titleScreen: String){
-
-    Scaffold (
-        topBar = {
-            CustomTopBar(titleScreen)
-        },
-
-        content = { padding ->
-            Column (modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
-            )
-            {
-                EditInput("Nome", editListState.nomeState)
-                EditInput("Usuario", editListState.usuarioState)
-                EditInput("Senha", editListState.senhaState)
-                EditInput("Notas", editListState.notasState, textInputHeight = 240)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(horizontal = 30.dp),
-                    horizontalArrangement = Arrangement.Center,
-                )
-                {
-                    Button(
-                        onClick = { /* Ação do botão */ },
-                    ){
-                        Text("Salvar")
-                    }
-                }
-            }
-        }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EditInputPreview() {
-    val test = EditListState (
-        nomeState = rememberSaveable { mutableStateOf("") },
-        usuarioState = rememberSaveable { mutableStateOf("") },
-        senhaState = rememberSaveable { mutableStateOf("") },
-        notasState = rememberSaveable { mutableStateOf("") },
-    )
-    EditListScreen(
-        test,
-        titleScreen = "Adcionar nova Senha",
-    )
-}
