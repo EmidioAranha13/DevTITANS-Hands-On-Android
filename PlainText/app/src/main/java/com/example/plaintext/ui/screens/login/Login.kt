@@ -94,7 +94,9 @@ fun Login(name: String, modifier: Modifier = Modifier) {
     var login by remember {mutableStateOf("")}
     var pswd by remember {mutableStateOf("")}
     var checked by remember {mutableStateOf(false)}
+    val context = LocalContext.current
     var yellowGreen = Color(0xFF9ACD32)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -168,7 +170,16 @@ fun Login(name: String, modifier: Modifier = Modifier) {
 
             }
             Button (
-                onClick = { /* ação ao clicar */ },
+                onClick = {
+                    val name = login
+                    val pswd = pswd
+                    if(name == "") {
+                        Toast.makeText(context, "Usuário Inválido!", Toast.LENGTH_SHORT).show()
+                    }
+                    if(pswd == "") {
+                        Toast.makeText(context, "Senha Inválida!", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(20.dp),
                 border = BorderStroke(0.dp, Color.Gray),
