@@ -100,6 +100,8 @@ fun Login(name: String, modifier: Modifier = Modifier, viewModel: PreferencesVie
     var checked by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    var yellowGreen = Color(0xFF9ACD32)
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
