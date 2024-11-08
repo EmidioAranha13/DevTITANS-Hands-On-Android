@@ -35,11 +35,16 @@ open class ListViewModel @Inject constructor () : ViewModel() {
     init{
         viewModelScope.launch {
                 //execute o metodo getList() do passwordDBStore e colete o resultado
+                passwordDBStore.getList().collect { passwordList ->
+                    // Atualiza o estado da lista com as senhas coletadas
+                    listViewState = listViewState.copy(passwordList = passwordList.map { it.toPasswordInfo() })
             }
         }
 
 
     fun savePassword(password: PasswordInfo){
-
+        viewModelScope.launch {
+            passwordDBStore.save(password) // Salva a senha
+        }
     }
 }
