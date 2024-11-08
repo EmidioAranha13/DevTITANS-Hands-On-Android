@@ -1,5 +1,6 @@
 package com.example.plaintext.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -46,12 +47,11 @@ class PreferencesViewModel @Inject constructor(
 
     // Função que verifica as credenciais
     fun checkCredentials(login: String, password: String): Boolean {
-        return if (login == preferencesState.login && password == preferencesState.password) {
-            preferencesState = preferencesState.copy(isLoggedIn = true, errorMessage = null)
-            true
-        } else {
-            preferencesState = preferencesState.copy(isLoggedIn = false, errorMessage = "Credenciais inválidas")
-            false
-        }
+        // To Debug login error
+        Log.d("PreferencesViewModel", "Checking credentials: input login=$login, input password=$password")
+        Log.d("PreferencesViewModel", "Stored credentials: login=${preferencesState.login}, password=${preferencesState.password}")
+
+
+        return (login == preferencesState.login && password == preferencesState.password)
     }
 }
