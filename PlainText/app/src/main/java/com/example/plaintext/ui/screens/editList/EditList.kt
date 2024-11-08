@@ -93,7 +93,19 @@ fun EditList(
                 )
                 {
                     Button(
-                        onClick = { /* Ação do botão */ },
+                        onClick = {
+                            // Quando o botão for pressionado, cria um novo PasswordInfo
+                            val updatedPassword = PasswordInfo(
+                                id = args.password.id, // ID permanece o mesmo
+                                name = editListState.nomeState.value,
+                                login = editListState.usuarioState.value,
+                                password = editListState.senhaState.value,
+                                notes = editListState.notasState.value
+                            )
+
+                            // Chama a função savePassword passando o PasswordInfo atualizado
+                            savePassword(updatedPassword)
+                        },
                     ){
                         Text("Salvar")
                     }
