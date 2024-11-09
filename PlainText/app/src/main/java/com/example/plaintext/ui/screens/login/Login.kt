@@ -13,13 +13,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -50,6 +54,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,14 +68,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plaintext.R
+import com.example.plaintext.ui.screens.hello.ListViewModel
+import com.example.plaintext.ui.screens.hello.listViewState
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
+import com.example.plaintext.ui.viewmodel.LoginViewModel
 
-data class LoginState(
-    val preencher: Boolean,
-    val login: String,
-    val navigateToSettings: () -> Unit,
-    val navigateToList: (name: String) -> Unit,
-    val checkCredentials: (login: String, password: String) -> Boolean,
+data class LoginViewState(
+    val checked: Boolean = false,
+    val login: String = "",
+    val password: String = "",
+    val checkCredentials: (login: String, password: String) -> Boolean = { _, _ -> false },
+    val navigateToSettings: () -> Unit = {},
+    val navigateToList: (name: String) -> Unit = {},
 )
 
 @Composable
@@ -90,44 +99,55 @@ fun Login_screen(
 }
 
 @Composable
-fun Login(name: String, modifier: Modifier = Modifier) {
-    var login by remember {mutableStateOf("")}
-    var pswd by remember {mutableStateOf("")}
-    var checked by remember {mutableStateOf(false)}
+fun Login(
+    name: String,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
+    val loginState = viewModel.loginState
+    val login = loginState.login
+    val pswd = loginState.password
+    val checked = loginState.checked
     val context = LocalContext.current
     var yellowGreen = Color(0xFF9ACD32)
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(top = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min)
+                .wrapContentHeight()
+                .padding(WindowInsets.systemBars.asPaddingValues())
                 .background(yellowGreen),
             contentAlignment = Alignment.Center,
         ) {
             Row (
-                modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Imagem de exemplo",
-                    modifier = Modifier.size(100.dp)
+                    modifier = Modifier
+                        .size(100.dp)
+                        .align(Alignment.CenterVertically)
                 )
                 Text(
                     text = "\"The most secure password manager\" Bob and Alice",
                     color = Color.White,
                     fontSize = 16.sp,
-                    modifier = Modifier.widthIn(max = 130.dp)
+                    modifier = Modifier
+                        .widthIn(max = 130.dp)
+                        .align(Alignment.CenterVertically)
+                        .padding(vertical = 0.dp)
                     )
             }
         }
         Column(
-            modifier = Modifier.padding(45.dp),
+            modifier = Modifier.padding(0.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -144,7 +164,7 @@ fun Login(name: String, modifier: Modifier = Modifier) {
 
                 OutlinedTextField(
                     value = login,
-                    onValueChange = { login = it },
+                    onValueChange = { viewModel.onLoginChanged(it) },
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -155,7 +175,7 @@ fun Login(name: String, modifier: Modifier = Modifier) {
 
                 OutlinedTextField(
                     value = pswd,
-                    onValueChange = { pswd = it },
+                    onValueChange = { viewModel.onPasswordChanged(it) },
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -164,7 +184,7 @@ fun Login(name: String, modifier: Modifier = Modifier) {
             ) {
                 Checkbox (
                     checked = checked,
-                    onCheckedChange = { checked = it },
+                    onCheckedChange = { viewModel.onCheckedChanged(it) },
                 )
                 Text(text="Salvar as informações de login", fontSize = 12.sp,)
 
