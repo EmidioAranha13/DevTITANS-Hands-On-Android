@@ -52,6 +52,6 @@ class PreferencesViewModel @Inject constructor(
         Log.d("PreferencesViewModel", "Stored credentials: login=${preferencesState.login}, password=${preferencesState.password}")
 
 
-        return (login == preferencesState.login && password == preferencesState.password)
+        return (login != "" && password != "" && login == preferencesState.login && password == preferencesState.password)
     }
 }
