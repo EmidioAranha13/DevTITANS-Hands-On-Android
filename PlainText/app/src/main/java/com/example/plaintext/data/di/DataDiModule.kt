@@ -27,7 +27,7 @@ object DataDiModule {
         passwordDao: PasswordDao
     ): PasswordDBStore = LocalPasswordDBStore(passwordDao)
 
-    @Provides
-	@Singleton
-	fun provideDBSimulator(): dbSimulator = dbSimulator()
+    //@Provides
+    //@Singleton
+    //fun provideDBSimulator(): dbSimulator = dbSimulator()
 }
