@@ -4,3 +4,4 @@ android-studio-2024.*
 **/.idea/
 **/.kotlin/
 **/local.propreties
+**/.gradle/

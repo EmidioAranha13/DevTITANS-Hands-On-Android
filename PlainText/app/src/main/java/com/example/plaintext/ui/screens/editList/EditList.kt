@@ -1,5 +1,6 @@
 package com.example.plaintext.ui.screens.editList
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,6 +63,8 @@ fun EditList(
     navigateBack: () -> Unit,
     savePassword: (password: PasswordInfo) -> Unit
 ) {
+    val context = LocalContext.current // Obtenha o contexto
+
     val editListState = EditListState (
         nomeState = rememberSaveable { mutableStateOf(args.password.name) },
         usuarioState = rememberSaveable { mutableStateOf(args.password.login) },
@@ -79,7 +83,15 @@ fun EditList(
                 .padding(padding)
             )
             {
-                TitleScreen("Adcionar nova Senha")
+                TitleScreen(
+                    if (args.password.name.isEmpty() && args.password.login.isEmpty() &&
+                    args.password.password.isEmpty() && args.password.notes.isEmpty()
+                    ) {
+                        "Adicionar nova senha"
+                    } else {
+                        "Editar Senha"
+                    }
+                )
                 EditInput("Nome", editListState.nomeState)
                 EditInput("Usuario", editListState.usuarioState)
                 EditInput("Senha", editListState.senhaState)
@@ -103,8 +115,18 @@ fun EditList(
                                 notes = editListState.notasState.value
                             )
 
-                            // Chama a função savePassword passando o PasswordInfo atualizado
-                            savePassword(updatedPassword)
+                            if(!isPasswordEmpty(updatedPassword)){
+                                // Chama a função savePassword passando o PasswordInfo atualizado
+                                savePassword(updatedPassword)
+                            }
+                            else {
+                                Toast.makeText(
+                                    context,
+                                    "Todos os campos estão vazios. Nada foi salvo.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
                         },
                     ){
                         Text("Salvar")
@@ -170,13 +192,24 @@ fun TitleScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name="Edit List Empty - Add Nova Senha")
 @Composable
 fun EditListPreview() {
     EditList(
-        Screen.EditList(PasswordInfo(1, "Nome", "Usuário", "Senha", "Notas")),
+        Screen.EditList(PasswordInfo(1, "", "", "", "")),
         navigateBack = {},
         savePassword = {}
     )
 }
+
+@Preview(showBackground = true, name="Edit List Empty - Edit Senha")
+@Composable
+fun EditListPreviewNotEmpty() {
+    EditList(
+        Screen.EditList(PasswordInfo(1, "Pantoja", "Mateus", "12345", "Teste Hands-on")),
+        navigateBack = {},
+        savePassword = {}
+    )
+}
+
 
