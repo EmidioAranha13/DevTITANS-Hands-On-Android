@@ -1,43 +1,57 @@
 package com.example.plaintext.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+// Definindo o estado da preferências
 data class PreferencesState(
     var login: String,
     var password: String,
-    var preencher: Boolean
+    var preencher: Boolean, // Para salvar ou não as credenciais
+    var isLoggedIn: Boolean = false, // Estado de login (se o login foi bem-sucedido)
+    var errorMessage: String? = null // Mensagem de erro (caso as credenciais sejam inválidas)
 )
 
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     handle: SavedStateHandle,
 ) : ViewModel() {
-    var preferencesState by mutableStateOf(PreferencesState(login = "devtitans", password = "123", preencher = true))
+    // O estado da tela, incluindo as credenciais e o estado de erro/sucesso do login
+    var preferencesState by mutableStateOf(PreferencesState(
+        login = "devtitans", // Login pré-definido
+        password = "123",    // Senha pré-definida
+        preencher = true     // Se a opção de salvar está marcada ou não
+    ))
         private set
 
+    // Função para atualizar o login
     fun updateLogin(login: String) {
-
+        preferencesState = preferencesState.copy(login = login)
     }
 
+    // Função para atualizar a senha
     fun updatePassword(password: String) {
-
+        preferencesState = preferencesState.copy(password = password)
     }
 
+    // Função para atualizar a opção de salvar as credenciais
     fun updatePreencher(preencher: Boolean) {
-
+        preferencesState = preferencesState.copy(preencher = preencher)
     }
 
-    fun checkCredentials(login: String, password: String): Boolean{
-        return login == preferencesState.login && password == preferencesState.password
+    // Função que verifica as credenciais
+    fun checkCredentials(login: String, password: String): Boolean {
+        // To Debug login error
+        Log.d("PreferencesViewModel", "Checking credentials: input login=$login, input password=$password")
+        Log.d("PreferencesViewModel", "Stored credentials: login=${preferencesState.login}, password=${preferencesState.password}")
+
+
+        return (login != "" && password != "" && login == preferencesState.login && password == preferencesState.password)
     }
 }
