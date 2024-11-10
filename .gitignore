@@ -1,3 +1,7 @@
 android-studio/
 android-studio-2024.*
-*/.gradle/*
+/.gradle/
+**/.gradle/*
+**/.idea/
+**/PlainText/local.properties
+.idea
