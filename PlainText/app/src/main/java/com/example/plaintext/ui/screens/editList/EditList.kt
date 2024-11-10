@@ -118,6 +118,12 @@ fun EditList(
                             if(!isPasswordEmpty(updatedPassword)){
                                 // Chama a função savePassword passando o PasswordInfo atualizado
                                 savePassword(updatedPassword)
+                                Toast.makeText(
+                                    context,
+                                    "Dados salvos com sucesso!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navigateBack()
                             }
                             else {
                                 Toast.makeText(

@@ -48,7 +48,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.plaintext.data.model.PasswordInfo
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 
-
 @Composable
 fun List_screen(
     listViewModel: ListViewModel,
@@ -65,6 +64,7 @@ fun ListView(
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
+
         floatingActionButton = {
             AddButton(
                 onClick = {
@@ -168,3 +168,4 @@ fun ListItem(
         )
     }
 }
+

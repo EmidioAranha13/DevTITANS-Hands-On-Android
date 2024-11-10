@@ -84,7 +84,7 @@ class dbSimulator() {
     private val datalist = mutableListOf<String>();
 
     init {
-        for (i in 1..100) {
+        for (i in 1..15) {
             datalist.add("devtitans #$i");
         }
 

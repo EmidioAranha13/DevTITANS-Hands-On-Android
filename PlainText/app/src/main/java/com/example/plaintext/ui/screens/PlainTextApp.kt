@@ -16,10 +16,12 @@ import com.example.plaintext.ui.screens.editList.EditList
 import com.example.plaintext.ui.screens.hello.Hello_screen
 import com.example.plaintext.ui.screens.list.AddButton
 import com.example.plaintext.ui.screens.list.ListView
+import com.example.plaintext.ui.screens.list.List_screen
 import com.example.plaintext.ui.screens.login.Login_screen
 import com.example.plaintext.ui.screens.login.TopBarComponent
 import com.example.plaintext.ui.screens.preferences.SettingsScreen
 import com.example.plaintext.ui.viewmodel.ListViewModel
+import com.example.plaintext.ui.viewmodel.ListViewState
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 import com.example.plaintext.utils.parcelableType
 import kotlin.reflect.typeOf
@@ -31,27 +33,36 @@ fun PlainTextApp(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = Screen.Hello("DevTITANS"),
-    )
-    {
+        startDestination = Screen.Login,
+    ){
         composable<Screen.Hello>{
             var args = it.toRoute<Screen.Hello>()
             Hello_screen(args)
         }
         composable<Screen.Login>{
             Login_screen(
-                navigateToSettings = {},
-                navigateToList = {}
+                navigateToSettings = {appState.navigateToPreference()},
+                navigateToList = {appState.navigateToList()}
             )
         }
+        composable<Screen.Preferences>{
+           SettingsScreen(navController = appState.navController)
+        }
+
         composable<Screen.EditList>(
             typeMap = mapOf(typeOf<PasswordInfo>() to parcelableType<PasswordInfo>())
         ) {
             val args = it.toRoute<Screen.EditList>()
             EditList(
                 args,
-                navigateBack = {},
+                navigateBack = {appState.navigateToList()},
                 savePassword = { password -> Unit }
+            )
+        }
+        composable<Screen.List> {
+            List_screen(
+                listViewModel = ListViewModel(),
+                navigateToEdit = { password: PasswordInfo -> appState.navigateToEditList(password)}
             )
         }
     }

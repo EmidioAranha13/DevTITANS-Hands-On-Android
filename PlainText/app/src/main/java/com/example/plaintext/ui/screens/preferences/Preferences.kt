@@ -21,25 +21,35 @@ import androidx.navigation.NavHostController
 import com.example.plaintext.ui.screens.login.TopBarComponent
 import com.example.plaintext.ui.screens.util.PreferenceInput
 import com.example.plaintext.ui.screens.util.PreferenceItem
-import com.example.plaintext.ui.viewmodel.PreferencesState
+import com.example.plaintext.ui.viewmodel.LoginViewModel
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SettingsScreen(navController: NavHostController?,
-                   viewModel: PreferencesViewModel = hiltViewModel()
+fun SettingsScreen(
+    navController: NavHostController?,
 ){
     Scaffold(
         topBar = {
             TopBarComponent()
         }
     ){ padding ->
-        SettingsContent(modifier = Modifier.padding(padding), viewModel)
+        SettingsContent(
+            modifier = Modifier.padding(padding),
+            )
     }
 }
 
 @Composable
-fun SettingsContent(modifier: Modifier = Modifier, viewModel: PreferencesViewModel) {
+fun SettingsContent(
+    modifier: Modifier = Modifier,
+    viewModel: PreferencesViewModel = hiltViewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
+) {
+    val state = viewModel.preferencesState
+    val user = state.login
+    val pswd = state.password
+    val checked = state.preencher
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -49,32 +59,32 @@ fun SettingsContent(modifier: Modifier = Modifier, viewModel: PreferencesViewMod
         PreferenceInput(
             title = "Preencher Login",
             label = "Login",
-            fieldValue = "",
-            summary = "Preencher login na tela inicial"
+            fieldValue = user,
+            summary = if (user == "") "Preencher login na tela inicial" else "Usuário: ${user}"
         ){
             // função para alterar o login
+            viewModel.onLoginChanged(it)
         }
 
         PreferenceInput(
             title = "Setar Senha",
             label = "Label",
-            fieldValue = "",
-            summary = "Senha para entrar no sistema"
+            fieldValue = pswd,
+            summary = if (pswd == "")  "Senha para entrar no sistema" else "Senha: ${pswd}"
         ){
             // função para alterar a senha
+            viewModel.onPasswordChanged(it)
         }
 
         PreferenceItem(
             title = "Preencher Login",
             summary = "Preencher login na tela inicial",
-            onClick = {
-                // deve alterar o estado que representa se o switch está ligado ou não
-            },
             control = {
                 Switch(
-                    checked = false, // deve ler o estado que representa se o switch está ligado ou não
+                    checked = checked, // deve ler o estado que representa se o switch está ligado ou não
                     onCheckedChange = {
                         // deve alterar o estado que representa se o switch está ligado ou não
+                        viewModel.onPreencherChange(it)
                     }
                 )
             }
