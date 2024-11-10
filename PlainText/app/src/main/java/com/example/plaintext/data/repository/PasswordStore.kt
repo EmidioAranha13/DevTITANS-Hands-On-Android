@@ -4,18 +4,20 @@ import com.example.plaintext.data.dao.PasswordDao
 import com.example.plaintext.data.model.Password
 import com.example.plaintext.data.model.PasswordInfo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 interface PasswordDBStore {
     fun getList(): Flow<List<Password>>
     suspend fun add(password: Password): Long
     suspend fun update(password: Password)
-    fun get(id: Int): Password?
+    fun get(id: Int): Flow<Password?>
     suspend fun save(passwordInfo: PasswordInfo)
     suspend fun isEmpty(): Flow<Boolean>
 }
 
 class LocalPasswordDBStore(
     private val passwordDao : PasswordDao
+
 ): PasswordDBStore {
     override fun getList(): Flow<List<Password>> {
         return passwordDao.getAllPasswords()
@@ -29,7 +31,7 @@ class LocalPasswordDBStore(
         passwordDao.update(password)
     }
 
-    override fun get(id: Int): Password? {
+    override fun get(id: Int): Flow<Password?> {
         return passwordDao.getPasswordById(id)
     }
 
@@ -41,7 +43,7 @@ class LocalPasswordDBStore(
             password = passwordInfo.password,
             notes = passwordInfo.notes
         )
-        passwordDao.insertPassword(password)
+        passwordDao.insert(password)
     }
 
     override suspend fun isEmpty(): Flow<Boolean> {

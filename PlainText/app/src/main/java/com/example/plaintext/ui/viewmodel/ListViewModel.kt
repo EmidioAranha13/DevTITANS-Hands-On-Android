@@ -63,6 +63,6 @@ private fun Password.toPasswordInfo(): PasswordInfo {
         name = this.name,
         login = this.login,
         password = this.password,
-        notes = this.notes
+        notes = this.notes.toString()
     )
 }
