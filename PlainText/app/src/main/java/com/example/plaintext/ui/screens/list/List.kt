@@ -64,7 +64,15 @@ fun ListView(
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
-        floatingActionButton = { AddButton( onClick = {}) }
+
+        floatingActionButton = {
+            AddButton(
+                onClick = {
+                    //Chamar o naviagteToEdit com campos do password vazios -> Add nova senha
+                    navigateToEdit(PasswordInfo(id = 0, name = "", login = "", password = "", notes = ""))
+                }
+            )
+        }
     ) { padding ->
         ListItemContent(
             modifier = Modifier.padding(padding),
@@ -93,25 +101,25 @@ fun ListItemContent(
     listState: ListViewState,
     navigateToEdit: (password: PasswordInfo) -> Unit
 ) {
-        when {
-            !listState.isCollected -> {
-                LoadingScreen()
-            }
+    when {
+        !listState.isCollected -> {
+            LoadingScreen()
+        }
 
-            else -> {
-                LazyColumn(
-                    modifier = modifier
-                        .fillMaxSize()
-                ) {
-                    items(listState.passwordList.size) {
-                        ListItem(
-                            listState.passwordList[it],
-                            navigateToEdit
-                        )
-                    }
+        else -> {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
+                items(listState.passwordList.size) {
+                    ListItem(
+                        listState.passwordList[it],
+                        navigateToEdit
+                    )
                 }
             }
         }
+    }
 }
 
 @Composable
@@ -160,3 +168,4 @@ fun ListItem(
         )
     }
 }
+

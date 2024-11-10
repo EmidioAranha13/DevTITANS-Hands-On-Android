@@ -69,6 +69,10 @@ class JetcasterAppState(
     fun navigateToLogin(){
         navController.navigate(Screen.Login)
     }
+    //fun para navegar para o editlist
+    fun navigateToEditList(password: PasswordInfo) {
+        navController.navigate(Screen.EditList(password = password))
+    }
 
     fun navigateToPreference(){
         navController.navigate(Screen.Preferences)

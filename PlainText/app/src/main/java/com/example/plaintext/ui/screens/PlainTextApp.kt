@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -25,6 +26,7 @@ import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 import com.example.plaintext.utils.parcelableType
 import kotlin.reflect.typeOf
 
+@Preview
 @Composable
 fun PlainTextApp(
     appState: JetcasterAppState = rememberJetcasterAppState()
@@ -39,16 +41,13 @@ fun PlainTextApp(
         }
         composable<Screen.Login>{
             Login_screen(
-                navigateToSettings = {},
-                navigateToList = {}
+                navigateToSettings = {appState.navigateToPreference()},
+                navigateToList = {appState.navigateToList()}
             )
         }
-//        composable<Screen.Preferences>{
-//           SettingsScreen(
-//               viewModel = PreferencesViewModel(),
-//               navController = appState.navController,
-//           )
-//        }
+        composable<Screen.Preferences>{
+           SettingsScreen(navController = appState.navController)
+        }
 
         composable<Screen.EditList>(
             typeMap = mapOf(typeOf<PasswordInfo>() to parcelableType<PasswordInfo>())
@@ -56,16 +55,14 @@ fun PlainTextApp(
             val args = it.toRoute<Screen.EditList>()
             EditList(
                 args,
-                navigateBack = {},
+                navigateBack = {appState.navigateToList()},
                 savePassword = { password -> Unit }
             )
         }
         composable<Screen.List> {
             List_screen(
                 listViewModel = ListViewModel(),
-                navigateToEdit = { passwordInfo ->
-                    
-                }
+                navigateToEdit = { password: PasswordInfo -> appState.navigateToEditList(password)}
             )
         }
     }
