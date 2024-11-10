@@ -39,16 +39,13 @@ fun PlainTextApp(
         }
         composable<Screen.Login>{
             Login_screen(
-                navigateToSettings = {},
-                navigateToList = {}
+                navigateToSettings = {appState.navigateToPreference()},
+                navigateToList = {appState.navigateToList()}
             )
         }
-//        composable<Screen.Preferences>{
-//           SettingsScreen(
-//               viewModel = PreferencesViewModel(),
-//               navController = appState.navController,
-//           )
-//        }
+        composable<Screen.Preferences>{
+           SettingsScreen(navController = appState.navController)
+        }
 
         composable<Screen.EditList>(
             typeMap = mapOf(typeOf<PasswordInfo>() to parcelableType<PasswordInfo>())

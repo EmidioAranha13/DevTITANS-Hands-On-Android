@@ -72,6 +72,7 @@ import com.example.plaintext.ui.screens.hello.ListViewModel
 import com.example.plaintext.ui.screens.hello.listViewState
 import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 import com.example.plaintext.ui.viewmodel.LoginViewModel
+import com.example.plaintext.ui.viewmodel.PreferencesState
 
 data class LoginViewState(
     val checked: Boolean = false,
@@ -89,11 +90,14 @@ fun Login_screen(
 ) {
     Scaffold(
         topBar = {
-            TopBarComponent()
+            TopBarComponent(navigateToSettings = navigateToSettings)
         }) { innerPadding ->
         Login(
             name = "Android",
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            navigateToList = navigateToList,
+            navigateToSettings = navigateToSettings,
+
         )
     }
 }
@@ -103,11 +107,11 @@ fun Login(
     name: String,
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    //    preferencesViewModel: PreferencesViewModel = hiltViewModel()
+    preferencesViewModel: PreferencesViewModel = hiltViewModel(),
+    navigateToList: () -> Unit,
+    navigateToSettings: () -> Unit
 ) {
     val loginState = loginViewModel.loginState
-    //val preferencesState = preferencesViewModel.preferencesState
-
     val login = loginState.login
     val pswd = loginState.password
     val checked = loginState.checked
@@ -199,9 +203,14 @@ fun Login(
                     // Chama a função para verificar as credenciais
                     if (loginViewModel.checkCredentials(login, pswd)) {
                         // Login bem-sucedido
+                        if(checked) {
+                           //Add aqui a função que atualiza as preferencias
+                        } else {
+                            loginViewModel.resetState()
+                        }
                         Toast.makeText(context, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
-                        // Aqui você pode navegar para outra tela
-//                        navController.navigate("list_screen")  // Aqui a navegação para a tela List
+                       // Aqui a navegação para a tela List
+                        navigateToList()
                     } else {
                         // Exibe mensagem de erro
                         Toast.makeText(context, "Login/Senha inválidos", Toast.LENGTH_SHORT).show()
@@ -257,7 +266,6 @@ fun MyAlertDialog(shouldShowDialog: MutableState<Boolean>) {
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBarComponent(
     navigateToSettings: (() -> Unit?)? = null,
-    navigateToSensores: (() -> Unit?)? = null,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val shouldShowDialog = remember { mutableStateOf(false) }
@@ -269,7 +277,7 @@ fun TopBarComponent(
     TopAppBar(
         title = { Text("PlainText") },
         actions = {
-            if (navigateToSettings != null && navigateToSensores != null) {
+            if (navigateToSettings != null) {
                 IconButton(onClick = { expanded = true }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "Menu")
                 }
@@ -305,7 +313,7 @@ fun TopBarComponent(
 //@Preview(name="Modo Paisagem", widthDp = 640, showBackground = true)
 @Composable
 fun PreviewUI() {
-    Login("Android")
+    Login("Android", Modifier, viewModel(), viewModel(), {}, {})
 }
 
 

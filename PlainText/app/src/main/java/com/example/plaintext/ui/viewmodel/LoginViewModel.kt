@@ -55,4 +55,8 @@ open class LoginViewModel @Inject constructor() : ViewModel() {
         return (
                 loginState.login != "" && loginState.password != "" && login == loginState.login && password == loginState.password)
     }
+
+    fun resetState() {
+        loginState = LoginViewState()
+    }
 }
