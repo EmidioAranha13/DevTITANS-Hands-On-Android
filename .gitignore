@@ -1,6 +1,6 @@
 android-studio/
 android-studio-2024.*
-<<<<<<< HEAD
+
 */.gradle/*
 ./PlainText/.gradle
 ./PlainText/.idea
@@ -8,18 +8,14 @@ android-studio-2024.*
 ./PlainText/local.properties
 
 .idea
-=======
-<<<<<<< HEAD
-**/.gradle/
-**/.idea/
-**/.kotlin/
+
+**/.gradle/*
+**/.idea/*
+**/.kotlin/*
 **/local.propreties
 **/.gradle/
-=======
 /.gradle/
 **/.gradle/*
 **/.idea/
 **/PlainText/local.properties
 .idea
->>>>>>> master
->>>>>>> master

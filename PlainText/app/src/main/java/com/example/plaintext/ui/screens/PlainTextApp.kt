@@ -56,12 +56,10 @@ fun PlainTextApp(
             EditList(
                 args,
                 navigateBack = {appState.navigateToList()},
-                savePassword = { password -> Unit }
             )
         }
         composable<Screen.List> {
             List_screen(
-                listViewModel = ListViewModel(),
                 navigateToEdit = { password: PasswordInfo -> appState.navigateToEditList(password)}
             )
         }

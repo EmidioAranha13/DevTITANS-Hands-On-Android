@@ -47,11 +47,14 @@ class ListViewModel @Inject constructor(
         }
     }
 
-    fun savePassword(password: PasswordInfo) {
+    fun savePassword(password: Password, newInfo: Boolean) {
         viewModelScope.launch {
-            passwordDBStore.save(password) // Salva a senha no banco de dados
-            // Não é necessário recarregar a lista, pois ela será atualizada automaticamente
-            // pela coleta contínua de passwordDBStore.getList()
+
+            if (newInfo) {
+                passwordDBStore.add(password)
+            } else {
+                passwordDBStore.update(password)
+            }
         }
     }
 }
