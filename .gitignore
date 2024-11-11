@@ -1,15 +1,11 @@
 android-studio/
 android-studio-2024.*
-<<<<<<< HEAD
 **/.gradle/
-**/.idea/
 **/.kotlin/
-**/local.propreties
-**/.gradle/
-=======
 /.gradle/
 **/.gradle/*
-**/.idea/
-**/PlainText/local.properties
 .idea
->>>>>>> master
+**/.idea/
+**/local.propreties
+**/PlainText/local.properties
+
