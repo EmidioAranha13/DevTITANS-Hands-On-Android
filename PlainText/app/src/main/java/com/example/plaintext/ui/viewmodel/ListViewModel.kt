@@ -22,24 +22,50 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ListViewState(
-    var passwordList: List<PasswordInfo>,
+    var passwordList: List<PasswordInfo> = emptyList(),
     var isCollected: Boolean = false
 )
 
-//Utilize o passwordBDStore para obter a lista de senhas e salva-las
 @HiltViewModel
-open class ListViewModel @Inject constructor () : ViewModel() {
-    var listViewState by mutableStateOf(ListViewState(passwordList = emptyList()))
+class ListViewModel @Inject constructor(
+    private val passwordDBStore: PasswordDBStore
+) : ViewModel() {
+
+    var listViewState by mutableStateOf(ListViewState())
         private set
 
-    init{
+    init {
         viewModelScope.launch {
-                //execute o metodo getList() do passwordDBStore e colete o resultado
+            // Executa o método getList() do passwordDBStore e coleta o resultado
+            passwordDBStore.getList().collect { passwordList ->
+                // Atualiza o estado da lista com as senhas coletadas
+                listViewState = listViewState.copy(
+                    passwordList = passwordList.map { it.toPasswordInfo() },
+                    isCollected = true
+                )
             }
         }
-
-
-    fun savePassword(password: PasswordInfo){
-
     }
+
+    fun savePassword(password: Password, newInfo: Boolean) {
+        viewModelScope.launch {
+            if (newInfo) {
+                val newPswd = password.copy(id = 0, name = password.name, login = password.login, password = password.password, notes = password.notes)
+                passwordDBStore.add(newPswd)
+            } else {
+                passwordDBStore.update(password)
+            }
+        }
+    }
+}
+
+// Função de extensão para converter Password para PasswordInfo
+private fun Password.toPasswordInfo(): PasswordInfo {
+    return PasswordInfo(
+        id = this.id,
+        name = this.name,
+        login = this.login,
+        password = this.password,
+        notes = this.notes.toString()
+    )
 }

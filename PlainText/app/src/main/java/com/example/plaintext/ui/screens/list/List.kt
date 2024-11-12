@@ -50,17 +50,16 @@ import com.example.plaintext.ui.viewmodel.PreferencesViewModel
 
 @Composable
 fun List_screen(
-    listViewModel: ListViewModel,
     navigateToEdit: (password: PasswordInfo) -> Unit
 ) {
-    ListView(listViewModel, navigateToEdit)
+    ListView(navigateToEdit)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListView(
-    listViewModel: ListViewModel,
-    navigateToEdit: (password: PasswordInfo) -> Unit
+    navigateToEdit: (password: PasswordInfo) -> Unit,
+    listViewModel: ListViewModel = hiltViewModel(),
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
