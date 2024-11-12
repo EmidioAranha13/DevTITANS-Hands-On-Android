@@ -49,9 +49,9 @@ class ListViewModel @Inject constructor(
 
     fun savePassword(password: Password, newInfo: Boolean) {
         viewModelScope.launch {
-
             if (newInfo) {
-                passwordDBStore.add(password)
+                val newPswd = password.copy(id = 0, name = password.name, login = password.login, password = password.password, notes = password.notes)
+                passwordDBStore.add(newPswd)
             } else {
                 passwordDBStore.update(password)
             }

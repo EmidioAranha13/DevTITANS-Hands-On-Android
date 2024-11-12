@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
 @Immutable
 data class Password(
     @PrimaryKey
-    @ColumnInfo(name = "id") val id: Int,
+    @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "login") val login: String,
     @ColumnInfo(name = "password") val password: String,
